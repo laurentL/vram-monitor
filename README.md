@@ -24,7 +24,7 @@ with a per-process breakdown.
 
 ## Requirements
 
-- GNOME Shell 48.
+- GNOME Shell 48 or 49.
 - An AMD GPU driven by `amdgpu`. Other drivers (NVIDIA, Intel…) do not expose
   the sysfs counters used here; the label then shows `VRAM n/a`.
 

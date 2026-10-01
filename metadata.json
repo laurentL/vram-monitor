@@ -4,7 +4,8 @@
   "description": "Shows GPU video memory (VRAM) usage in the top bar.\n\n* Used, free and total VRAM, GTT usage\n* Per-process VRAM and GTT usage, sorted by VRAM (processes of the current user)\n* Configurable label format, alert threshold, refresh interval and GPU\n\nCurrently supports AMD GPUs (amdgpu driver). Data is read from sysfs and /proc, no external tool is used.",
   "version-name": "1.0",
   "shell-version": [
-    "48"
+    "48",
+    "49"
   ],
   "url": "https://github.com/laurentL/vram-monitor",
   "settings-schema": "org.gnome.shell.extensions.vram-monitor",

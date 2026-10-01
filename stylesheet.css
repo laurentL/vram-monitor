@@ -1,0 +1,29 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
+
+.vram-monitor-alert {
+    color: #ff7b63;
+    font-weight: bold;
+}
+
+.vram-monitor-value {
+    font-feature-settings: "tnum";
+}
+
+.vram-monitor-header {
+    font-weight: bold;
+}
+
+.vram-monitor-name {
+    min-width: 12em;
+    max-width: 18em;
+}
+
+.vram-monitor-number {
+    min-width: 5em;
+    text-align: right;
+    font-feature-settings: "tnum";
+}
+
+.vram-monitor-notice {
+    font-size: smaller;
+}

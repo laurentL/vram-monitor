@@ -1,0 +1,234 @@
+# English translations for vram-monitor@laurentl.github.io package.
+# Copyright (C) 2026 THE vram-monitor@laurentl.github.io'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the vram-monitor@laurentl.github.io package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: vram-monitor@laurentl.github.io\n"
+"Report-Msgid-Bugs-To: https://github.com/laurentL/vram-monitor/issues\n"
+"POT-Creation-Date: 2026-10-01 15:27+0200\n"
+"PO-Revision-Date: 2026-10-01 15:09+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: extension.js:29 prefs.js:86
+#, javascript-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: extension.js:33
+#, javascript-format
+msgid "%d%%"
+msgstr "%d%%"
+
+#: extension.js:83
+msgid "Shows GPU video memory (VRAM) usage in the top bar."
+msgstr "Shows GPU video memory (VRAM) usage in the top bar."
+
+#: extension.js:84
+msgid "License: GPL-2.0-or-later"
+msgstr "License: GPL-2.0-or-later"
+
+#: extension.js:89
+msgid "Website"
+msgstr "Website"
+
+#: extension.js:97
+msgid "Close"
+msgstr "Close"
+
+#: extension.js:111
+msgid "VRAM Monitor"
+msgstr "VRAM Monitor"
+
+#: extension.js:124
+msgid "VRAM"
+msgstr "VRAM"
+
+#: extension.js:145 prefs.js:81
+msgid "GPU"
+msgstr "GPU"
+
+#: extension.js:146
+msgid "VRAM used"
+msgstr "VRAM used"
+
+#: extension.js:147
+msgid "VRAM free"
+msgstr "VRAM free"
+
+#: extension.js:148
+msgid "VRAM total"
+msgstr "VRAM total"
+
+#: extension.js:149
+msgid "GTT used"
+msgstr "GTT used"
+
+#: extension.js:153
+msgid "Processes"
+msgstr "Processes"
+
+#: extension.js:155
+msgid "Name"
+msgstr "Name"
+
+#: extension.js:155
+msgid "PID"
+msgstr "PID"
+
+#: extension.js:155
+msgid "VRAM (MB)"
+msgstr "VRAM (MB)"
+
+#: extension.js:155
+msgid "GTT (MB)"
+msgstr "GTT (MB)"
+
+#: extension.js:161
+msgid "Only processes of the current user can be inspected."
+msgstr "Only processes of the current user can be inspected."
+
+#: extension.js:166
+msgid "Preferences"
+msgstr "Preferences"
+
+#: extension.js:167
+msgid "About"
+msgstr "About"
+
+#: extension.js:259
+msgid "VRAM n/a"
+msgstr "VRAM n/a"
+
+#: extension.js:267
+#, javascript-format
+msgid "VRAM %s/%s GB"
+msgstr "VRAM %s/%s GB"
+
+#: extension.js:271
+#, javascript-format
+msgid "VRAM %s"
+msgstr "VRAM %s"
+
+#: extension.js:274
+#, javascript-format
+msgid "VRAM %s/%s GB · %s free"
+msgstr "VRAM %s/%s GB · %s free"
+
+#: extension.js:288
+msgid "No supported GPU"
+msgstr "No supported GPU"
+
+#: extension.js:310
+msgid "Unavailable"
+msgstr "Unavailable"
+
+#: extension.js:314
+msgid "Scanning…"
+msgstr "Scanning…"
+
+#: extension.js:318
+msgid "No process found"
+msgstr "No process found"
+
+#: extension.js:335
+#, javascript-format
+msgid "%d more process"
+msgid_plural "%d more processes"
+msgstr[0] "%d more process"
+msgstr[1] "%d more processes"
+
+#: prefs.js:59
+msgid "Display"
+msgstr "Display"
+
+#: prefs.js:63 schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:36
+msgid "Label format"
+msgstr "Label format"
+
+#: prefs.js:66
+msgid "Full — VRAM 21.1/24.0 GB · 2.9 free"
+msgstr "Full — VRAM 21.1/24.0 GB · 2.9 free"
+
+#: prefs.js:67
+msgid "Compact — VRAM 21.1/24.0 GB"
+msgstr "Compact — VRAM 21.1/24.0 GB"
+
+#: prefs.js:68
+msgid "Percentage — VRAM 88%"
+msgstr "Percentage — VRAM 88%"
+
+#: prefs.js:74 schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:15
+msgid "Alert threshold"
+msgstr "Alert threshold"
+
+#: prefs.js:75
+msgid "Highlight the label above this VRAM usage (%)"
+msgstr "Highlight the label above this VRAM usage (%)"
+
+#: prefs.js:77
+msgid "Monitoring"
+msgstr "Monitoring"
+
+#: prefs.js:82
+msgid "No supported GPU detected"
+msgstr "No supported GPU detected"
+
+#: prefs.js:84
+msgid "Automatic (most VRAM)"
+msgstr "Automatic (most VRAM)"
+
+#: prefs.js:92 schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:9
+msgid "Refresh interval"
+msgstr "Refresh interval"
+
+#: prefs.js:93
+msgid "Seconds between updates"
+msgstr "Seconds between updates"
+
+#: prefs.js:94
+msgid "Maximum processes"
+msgstr "Maximum processes"
+
+#: prefs.js:95
+msgid "Number of processes listed in the menu"
+msgstr "Number of processes listed in the menu"
+
+#: schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:10
+msgid "Seconds between two updates of the indicator and of the process list."
+msgstr "Seconds between two updates of the indicator and of the process list."
+
+#: schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:16
+msgid "VRAM usage, in percent, above which the label is highlighted."
+msgstr "VRAM usage, in percent, above which the label is highlighted."
+
+#: schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:21
+msgid "Maximum number of processes"
+msgstr "Maximum number of processes"
+
+#: schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:22
+msgid "Number of processes listed in the menu."
+msgstr "Number of processes listed in the menu."
+
+#: schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:26
+msgid "Monitored GPU"
+msgstr "Monitored GPU"
+
+#: schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:27
+msgid ""
+"PCI address (drm-pdev) of the monitored GPU. Empty selects the GPU with the "
+"most VRAM."
+msgstr ""
+"PCI address (drm-pdev) of the monitored GPU. Empty selects the GPU with the "
+"most VRAM."
+
+#: schemas/org.gnome.shell.extensions.vram-monitor.gschema.xml:37
+msgid "Format of the top bar label: full, compact or percent."
+msgstr "Format of the top bar label: full, compact or percent."

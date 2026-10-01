@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
+<schemalist gettext-domain="vram-monitor@laurentl.github.io">
+  <schema id="org.gnome.shell.extensions.vram-monitor"
+          path="/org/gnome/shell/extensions/vram-monitor/">
+    <key name="refresh-interval" type="u">
+      <range min="1" max="60"/>
+      <default>2</default>
+      <summary>Refresh interval</summary>
+      <description>Seconds between two updates of the indicator and of the process list.</description>
+    </key>
+    <key name="alert-threshold" type="u">
+      <range min="50" max="100"/>
+      <default>90</default>
+      <summary>Alert threshold</summary>
+      <description>VRAM usage, in percent, above which the label is highlighted.</description>
+    </key>
+    <key name="max-processes" type="u">
+      <range min="1" max="50"/>
+      <default>10</default>
+      <summary>Maximum number of processes</summary>
+      <description>Number of processes listed in the menu.</description>
+    </key>
+    <key name="gpu" type="s">
+      <default>''</default>
+      <summary>Monitored GPU</summary>
+      <description>PCI address (drm-pdev) of the monitored GPU. Empty selects the GPU with the most VRAM.</description>
+    </key>
+    <key name="label-format" type="s">
+      <choices>
+        <choice value="full"/>
+        <choice value="compact"/>
+        <choice value="percent"/>
+      </choices>
+      <default>'full'</default>
+      <summary>Label format</summary>
+      <description>Format of the top bar label: full, compact or percent.</description>
+    </key>
+  </schema>
+</schemalist>

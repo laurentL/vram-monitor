@@ -78,11 +78,13 @@ class Tooltip {
     }
 
     hide() {
-        this._label.hide();
+        // Rows being destroyed after the tooltip, in disable(), still call this.
+        this._label?.hide();
     }
 
     destroy() {
         this._label.destroy();
+        this._label = null;
     }
 }
 
@@ -113,11 +115,13 @@ class ProcessRow extends PopupMenu.PopupBaseMenuItem {
         for (const label of [this._name, this._pid, this._vram, this._gtt])
             this.add_child(label);
 
-        this._vram.connect('notify::hover', () => this._syncTooltip());
-        this.connect('destroy', () => {
-            if (this._vram.hover)
-                this._tooltip.hide();
-        });
+        if (tooltip) {
+            this._vram.connectObject('notify::hover', () => this._syncTooltip(), this);
+            this.connect('destroy', () => {
+                if (this._vram.hover)
+                    this._tooltip.hide();
+            });
+        }
     }
 
     update({name, pid, vram, gtt, vramTooltip = null}) {
@@ -203,12 +207,12 @@ class VramIndicator extends PanelMenu.Button {
 
         this._buildMenu();
 
-        this.menu.connect('open-state-changed', (_menu, open) => {
+        this.menu.connectObject('open-state-changed', (_menu, open) => {
             if (open)
                 this._refresh();
             else
                 this._tooltip.hide();
-        });
+        }, this);
         this._settings.connectObject('changed', (_settings, key) => {
             this._onSettingChanged(key);
         }, this);
@@ -255,9 +259,9 @@ class VramIndicator extends PanelMenu.Button {
     _openAbout() {
         if (!this._aboutDialog) {
             this._aboutDialog = new AboutDialog(this._extension.metadata);
-            this._aboutDialog.connect('destroy', () => {
+            this._aboutDialog.connectObject('destroy', () => {
                 this._aboutDialog = null;
-            });
+            }, this);
         }
         this._aboutDialog.open();
     }
@@ -437,8 +441,10 @@ class VramIndicator extends PanelMenu.Button {
         this._cancellable.cancel();
         this._stopTimer();
         this._settings.disconnectObject(this);
+        this.menu.disconnectObject(this);
         this._aboutDialog?.destroy();
         this._tooltip.destroy();
+        this._tooltip = null;
         super.destroy();
     }
 }

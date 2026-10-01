@@ -27,3 +27,12 @@
 .vram-monitor-notice {
     font-size: smaller;
 }
+
+.vram-monitor-capped {
+    color: #ff7b63;
+}
+
+.vram-monitor-tooltip {
+    max-width: 26em;
+    border-radius: 12px;
+}

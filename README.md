@@ -13,7 +13,10 @@ with a per-process breakdown.
 - Menu with:
   - used / free / total VRAM, GTT usage and the monitored card (`card0 (0000:03:00.0)`);
   - the processes using the GPU, sorted by VRAM: name, PID, VRAM (MB), GTT (MB),
-    limited to N rows and refreshed while the menu is open;
+    limited to N rows and refreshed while the menu is open. When the kernel
+    reports more VRAM for a process than the card has, the value is capped to
+    the card's VRAM and the excess is shown separately (e.g. `24560 +3556`),
+    with a tooltip explaining why;
   - Preferences and About entries.
 - Preferences: refresh interval, alert threshold, maximum number of processes,
   GPU (automatic = the card with the most VRAM, or a specific card), label format.
@@ -63,9 +66,11 @@ gnome-extensions enable vram-monitor@laurentl.github.io
 
 - Only the processes of the current user can be inspected: `/proc/<pid>/fdinfo`
   of other users' processes is not readable without root.
-- `drm-total-vram` counts every buffer a client has a handle to, including
-  buffers shared with other processes, so the per-process values can add up to
-  more than the used VRAM.
+- `drm-total-vram` counts every buffer placed in VRAM by a client, including
+  buffers currently evicted to system memory and buffers shared with other
+  processes. When VRAM is full, a single process can therefore exceed the card
+  (shown as `card VRAM +excess`), and the per-process values can add up to more
+  than the used VRAM.
 - On some amdgpu kernels `drm-memory-vram` / `drm-resident-vram` report values
   larger than the card itself; they are only used when `drm-total-vram` is
   missing (older kernels).
@@ -87,12 +92,6 @@ translations are compiled into it, `.po` files and build files are not shipped.
 
 To add a translation, copy `po/vram-monitor.pot` to `po/<lang>.po`, translate it
 and run `make pack`.
-
-### Screenshot to take
-
-`docs/screenshot.png` is referenced above and is not in the repository yet:
-take it with the menu open (`make nested`, or your own session), preferably on
-a session without personal process names.
 
 ## License
 

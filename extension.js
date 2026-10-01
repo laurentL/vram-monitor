@@ -25,6 +25,10 @@ function gib(bytes) {
     return (bytes / GIB).toFixed(1);
 }
 
+function mib(bytes) {
+    return Math.round(bytes / MIB).toString();
+}
+
 function formatSize(bytes) {
     return _('%s GB').format(gib(bytes));
 }
@@ -50,22 +54,91 @@ class InfoRow extends PopupMenu.PopupBaseMenuItem {
     }
 }
 
+// The Shell has no tooltip widget for menus: a single label, styled like the
+// dash labels, is shown under the hovered cell.
+class Tooltip {
+    constructor() {
+        this._label = new St.Label({style_class: 'dash-label vram-monitor-tooltip', visible: false});
+        this._label.clutter_text.line_wrap = true;
+        Main.uiGroup.add_child(this._label);
+    }
+
+    show(actor, text) {
+        this._label.text = text;
+        Main.uiGroup.set_child_above_sibling(this._label, null);
+
+        const [x, y] = actor.get_transformed_position();
+        const [width, height] = actor.get_transformed_size();
+        const [, labelWidth] = this._label.get_preferred_width(-1);
+        const monitor = Main.layoutManager.findMonitorForActor(actor);
+        const labelX = Math.max(monitor.x, Math.min(x + width - labelWidth,
+            monitor.x + monitor.width - labelWidth));
+        this._label.set_position(Math.floor(labelX), Math.floor(y + height));
+        this._label.show();
+    }
+
+    hide() {
+        this._label.hide();
+    }
+
+    destroy() {
+        this._label.destroy();
+    }
+}
+
 class ProcessRow extends PopupMenu.PopupBaseMenuItem {
     static {
         GObject.registerClass(this);
     }
 
-    constructor([name, ...numbers], styleClass = '') {
+    /**
+     * @param {Tooltip} [tooltip] - shown over the VRAM cell when it has a
+     *   tooltip text
+     * @param {string} [styleClass]
+     */
+    constructor(tooltip = null, styleClass = '') {
         super({activate: false, hover: false, can_focus: false, style_class: styleClass});
-        const nameLabel = new St.Label({
-            text: name,
-            x_expand: true,
-            style_class: 'vram-monitor-name',
+        this._tooltip = tooltip;
+        this._vramTooltip = null;
+
+        this._name = new St.Label({x_expand: true, style_class: 'vram-monitor-name'});
+        this._name.clutter_text.ellipsize = Pango.EllipsizeMode.END;
+        this._pid = new St.Label({style_class: 'vram-monitor-number'});
+        this._vram = new St.Label({
+            style_class: 'vram-monitor-number',
+            reactive: tooltip !== null,
+            track_hover: tooltip !== null,
         });
-        nameLabel.clutter_text.ellipsize = Pango.EllipsizeMode.END;
-        this.add_child(nameLabel);
-        for (const text of numbers)
-            this.add_child(new St.Label({text, style_class: 'vram-monitor-number'}));
+        this._gtt = new St.Label({style_class: 'vram-monitor-number'});
+        for (const label of [this._name, this._pid, this._vram, this._gtt])
+            this.add_child(label);
+
+        this._vram.connect('notify::hover', () => this._syncTooltip());
+        this.connect('destroy', () => {
+            if (this._vram.hover)
+                this._tooltip.hide();
+        });
+    }
+
+    update({name, pid, vram, gtt, vramTooltip = null}) {
+        this._name.text = name;
+        this._pid.text = pid;
+        this._vram.text = vram;
+        this._gtt.text = gtt;
+        this._vramTooltip = vramTooltip;
+        if (vramTooltip)
+            this._vram.add_style_class_name('vram-monitor-capped');
+        else
+            this._vram.remove_style_class_name('vram-monitor-capped');
+        if (this._vram.hover)
+            this._syncTooltip();
+    }
+
+    _syncTooltip() {
+        if (this._vram.hover && this._vramTooltip)
+            this._tooltip.show(this._vram, this._vramTooltip);
+        else
+            this._tooltip.hide();
     }
 }
 
@@ -117,6 +190,7 @@ class VramIndicator extends PanelMenu.Button {
         this._processes = null;
         this._timeoutId = 0;
         this._aboutDialog = null;
+        this._tooltip = new Tooltip();
         this._readingCards = false;
         this._readingProcesses = false;
 
@@ -132,6 +206,8 @@ class VramIndicator extends PanelMenu.Button {
         this.menu.connect('open-state-changed', (_menu, open) => {
             if (open)
                 this._refresh();
+            else
+                this._tooltip.hide();
         });
         this._settings.connectObject('changed', (_settings, key) => {
             this._onSettingChanged(key);
@@ -151,10 +227,16 @@ class VramIndicator extends PanelMenu.Button {
             this.menu.addMenuItem(row);
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem(_('Processes')));
-        this.menu.addMenuItem(new ProcessRow(
-            [_('Name'), _('PID'), _('VRAM (MB)'), _('GTT (MB)')],
-            'vram-monitor-header'));
+        const header = new ProcessRow(null, 'vram-monitor-header');
+        header.update({name: _('Name'), pid: _('PID'), vram: _('VRAM (MB)'), gtt: _('GTT (MB)')});
+        this.menu.addMenuItem(header);
+
+        // Rows are updated in place so that a hovered cell keeps its tooltip
+        // across refreshes; the message item stays last.
         this._processSection = new PopupMenu.PopupMenuSection();
+        this._processRows = [];
+        this._processMessage = new PopupMenu.PopupMenuItem('', {reactive: false});
+        this._processSection.addMenuItem(this._processMessage);
         this.menu.addMenuItem(this._processSection);
 
         const notice = new PopupMenu.PopupMenuItem(
@@ -299,41 +381,56 @@ class VramIndicator extends PanelMenu.Button {
         this._gttRow.setValue(`${formatSize(card.gttUsed)} / ${formatSize(card.gttTotal)}`);
     }
 
-    _addProcessMessage(text) {
-        this._processSection.addMenuItem(new PopupMenu.PopupMenuItem(text, {reactive: false}));
+    _vramCell(vram) {
+        // drm-total-vram also counts buffers meant for VRAM that are evicted
+        // to system memory, so it can exceed the card's VRAM when it is full.
+        const cardVram = this._card.vramTotal;
+        if (vram <= cardVram)
+            return {vram: mib(vram)};
+        return {
+            vram: `${mib(cardVram)} +${mib(vram - cardVram)}`,
+            vramTooltip: _('The kernel reports %s MB for this process, more than the %s MB of the card: this total also counts buffers meant for VRAM that are currently evicted to system memory.')
+                .format(mib(vram), mib(cardVram)),
+        };
+    }
+
+    _processMessageText(shown) {
+        if (!this._card)
+            return _('Unavailable');
+        if (this._processes === null)
+            return _('Scanning…');
+        if (this._processes.length === 0)
+            return _('No process found');
+        const hidden = this._processes.length - shown;
+        if (hidden > 0)
+            return ngettext('%d more process', '%d more processes', hidden).format(hidden);
+        return null;
     }
 
     _renderProcesses() {
-        this._processSection.removeAll();
-
-        if (!this._card) {
-            this._addProcessMessage(_('Unavailable'));
-            return;
-        }
-        if (this._processes === null) {
-            this._addProcessMessage(_('Scanning…'));
-            return;
-        }
-        if (this._processes.length === 0) {
-            this._addProcessMessage(_('No process found'));
-            return;
-        }
-
         const max = this._settings.get_uint('max-processes');
-        for (const process of this._processes.slice(0, max)) {
-            this._processSection.addMenuItem(new ProcessRow([
-                process.name,
-                String(process.pid),
-                Math.round(process.vram / MIB).toString(),
-                Math.round(process.gtt / MIB).toString(),
-            ]));
-        }
+        const processes = this._card && this._processes ? this._processes.slice(0, max) : [];
 
-        const hidden = this._processes.length - max;
-        if (hidden > 0) {
-            this._addProcessMessage(ngettext(
-                '%d more process', '%d more processes', hidden).format(hidden));
-        }
+        while (this._processRows.length > processes.length)
+            this._processRows.pop().destroy();
+        processes.forEach((process, i) => {
+            let row = this._processRows[i];
+            if (!row) {
+                row = new ProcessRow(this._tooltip);
+                this._processSection.addMenuItem(row, i);
+                this._processRows.push(row);
+            }
+            row.update({
+                name: process.name,
+                pid: String(process.pid),
+                gtt: mib(process.gtt),
+                ...this._vramCell(process.vram),
+            });
+        });
+
+        const message = this._processMessageText(processes.length);
+        this._processMessage.label.text = message ?? '';
+        this._processMessage.visible = message !== null;
     }
 
     destroy() {
@@ -341,6 +438,7 @@ class VramIndicator extends PanelMenu.Button {
         this._stopTimer();
         this._settings.disconnectObject(this);
         this._aboutDialog?.destroy();
+        this._tooltip.destroy();
         super.destroy();
     }
 }

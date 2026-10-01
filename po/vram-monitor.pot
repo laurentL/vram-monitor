@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vram-monitor@laurentl.github.io\n"
 "Report-Msgid-Bugs-To: https://github.com/laurentL/vram-monitor/issues\n"
-"POT-Creation-Date: 2026-10-01 15:27+0200\n"
+"POT-Creation-Date: 2026-10-01 15:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,128 +18,136 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: extension.js:29 prefs.js:86
+#: extension.js:33 prefs.js:86
 #, javascript-format
 msgid "%s GB"
 msgstr ""
 
-#: extension.js:33
+#: extension.js:37
 #, javascript-format
 msgid "%d%%"
 msgstr ""
 
-#: extension.js:83
+#: extension.js:144
 msgid "Shows GPU video memory (VRAM) usage in the top bar."
 msgstr ""
 
-#: extension.js:84
+#: extension.js:145
 msgid "License: GPL-2.0-or-later"
 msgstr ""
 
-#: extension.js:89
+#: extension.js:150
 msgid "Website"
 msgstr ""
 
-#: extension.js:97
+#: extension.js:158
 msgid "Close"
 msgstr ""
 
-#: extension.js:111
+#: extension.js:172
 msgid "VRAM Monitor"
 msgstr ""
 
-#: extension.js:124
+#: extension.js:186
 msgid "VRAM"
 msgstr ""
 
-#: extension.js:145 prefs.js:81
+#: extension.js:209 prefs.js:81
 msgid "GPU"
 msgstr ""
 
-#: extension.js:146
+#: extension.js:210
 msgid "VRAM used"
 msgstr ""
 
-#: extension.js:147
+#: extension.js:211
 msgid "VRAM free"
 msgstr ""
 
-#: extension.js:148
+#: extension.js:212
 msgid "VRAM total"
 msgstr ""
 
-#: extension.js:149
+#: extension.js:213
 msgid "GTT used"
 msgstr ""
 
-#: extension.js:153
+#: extension.js:217
 msgid "Processes"
 msgstr ""
 
-#: extension.js:155
+#: extension.js:219
 msgid "Name"
 msgstr ""
 
-#: extension.js:155
+#: extension.js:219
 msgid "PID"
 msgstr ""
 
-#: extension.js:155
+#: extension.js:219
 msgid "VRAM (MB)"
 msgstr ""
 
-#: extension.js:155
+#: extension.js:219
 msgid "GTT (MB)"
 msgstr ""
 
-#: extension.js:161
+#: extension.js:225
 msgid "Only processes of the current user can be inspected."
 msgstr ""
 
-#: extension.js:166
+#: extension.js:230
 msgid "Preferences"
 msgstr ""
 
-#: extension.js:167
+#: extension.js:231
 msgid "About"
 msgstr ""
 
-#: extension.js:259
+#: extension.js:323
 msgid "VRAM n/a"
 msgstr ""
 
-#: extension.js:267
+#: extension.js:331
 #, javascript-format
 msgid "VRAM %s/%s GB"
 msgstr ""
 
-#: extension.js:271
+#: extension.js:335
 #, javascript-format
 msgid "VRAM %s"
 msgstr ""
 
-#: extension.js:274
+#: extension.js:338
 #, javascript-format
 msgid "VRAM %s/%s GB · %s free"
 msgstr ""
 
-#: extension.js:288
+#: extension.js:352
 msgid "No supported GPU"
 msgstr ""
 
-#: extension.js:310
+#: extension.js:378
+#, javascript-format
+msgid ""
+"The kernel reports %s MB for this process, more than the %s MB of the card: "
+"this total also counts buffers meant for VRAM that are currently evicted to "
+"system memory."
+msgstr ""
+
+#: extension.js:388
 msgid "Unavailable"
 msgstr ""
 
-#: extension.js:314
+#: extension.js:392
 msgid "Scanning…"
 msgstr ""
 
-#: extension.js:318
+#: extension.js:396
 msgid "No process found"
 msgstr ""
 
-#: extension.js:335
+#: extension.js:413
 #, javascript-format
 msgid "%d more process"
 msgid_plural "%d more processes"
